@@ -1,31 +1,42 @@
-<!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{{ asset('img/logo.png') }}" type="image/png">
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts.app')
 
-    <title>GitHub Search</title>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <!-- Loader styles -->
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
-</head>
-<body>
-
-<div id="app">
-    {{--Vue component for search user on GitHub--}}
-    <search-component></search-component>
-</div>
-
-<script src="{{ asset('js/app.js') }}"></script>
-</body>
-</html>
+@section('content')
+    <div class="container">
+        <form method="POST" action="{{route('search')}}">
+            {{csrf_field()}}
+            <h1>Find user on GitHub</h1>
+            {{csrf_field()}}
+            <div class="col-md-11 col-lg-11">
+                <input type="text" id="searchUser" name="name" class="form-control" placeholder="Username...">
+            </div>
+            <div class="col-md-1 col-lg-1">
+                <button class="btn btn-primary" style="float:right">Search</button>
+            </div>
+        </form>
+        <br>
+        <div>
+            @if(count($users) > 0)
+                <h3 class="page-header"><strong>Users: </strong></h3>
+                @foreach($users->items as $user)
+                    <div id="follower">
+                        <div class="well">
+                            <div class="row" style="cursor: pointer">
+                                <div class="col-md-2">
+                                    <img src="{{$user->avatar_url}}" alt="" width="70%">
+                                </div>
+                                <div class="col-md-5">
+                                    <strong>{{$user->login}}</strong>
+                                </div>
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="{{url('/user-'.$user->login)}}" class="btn btn-success">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div>
+@endsection
